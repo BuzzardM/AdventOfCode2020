@@ -5,24 +5,24 @@ using System.Collections.Generic;
 
 namespace AdventOfCode
 {
-    public class Day_01 : BaseDay
+    public class Day01 : BaseDay
     {
         private readonly List<int> _input;
         private const int MaxNum = 2020;
 
-        public Day_01()
+        public Day01()
         {
             _input = File.ReadAllLines(InputFilePath).Select(int.Parse).ToList();
         }
 
         public override string Solve_1()
         {
-            foreach (int i in _input)
+            foreach (var i in _input)
             {
                 if (i > MaxNum)
                     continue;
 
-                foreach (int j in _input)
+                foreach (var j in _input)
                 {
                     if (i + j == MaxNum)
                         return (i*j).ToString();
@@ -33,17 +33,17 @@ namespace AdventOfCode
 
         public override string Solve_2()
         {
-            foreach (int i in _input)
+            foreach (var i in _input)
             {
                 if (i > MaxNum)
                     continue;
 
-                foreach (int j in _input)
+                foreach (var j in _input)
                 {
                     if (j > MaxNum)
                         continue;
 
-                    foreach (int k in _input)
+                    foreach (var k in _input)
                     {
                         if (i + j + k == MaxNum)
                             return (i * j * k).ToString();
