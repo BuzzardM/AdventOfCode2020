@@ -40,7 +40,7 @@ namespace AdventOfCode
 
                 foreach (var j in _input)
                 {
-                    if (j > MaxNum)
+                    if (i + j > MaxNum)
                         continue;
 
                     foreach (var k in _input)
