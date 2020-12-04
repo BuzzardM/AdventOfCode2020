@@ -15,13 +15,13 @@ namespace AdventOfCode
 
         public override string Solve_1()
         {
-            return GetTreeEncouters(1, 3).ToString();
+            return GetTreeEncounters(1, 3).ToString();
         }
 
         public override string Solve_2()
         {
-            return ((long) GetTreeEncouters(1, 1) * GetTreeEncouters(1, 3) * GetTreeEncouters(1, 5) * GetTreeEncouters(1, 7) *
-                    GetTreeEncouters(2, 1)).ToString();
+            return ((long) GetTreeEncounters(1, 1) * GetTreeEncounters(1, 3) * GetTreeEncounters(1, 5) * GetTreeEncounters(1, 7) *
+                    GetTreeEncounters(2, 1)).ToString();
         }
 
         private char[][] ParseInput()
@@ -29,7 +29,7 @@ namespace AdventOfCode
             return File.ReadAllLines(InputFilePath).Select(i => i.ToArray()).ToArray();
         }
 
-        private int GetTreeEncouters(int amountOfStepsDown, int amountOfStepsRight)
+        private int GetTreeEncounters(int amountOfStepsDown, int amountOfStepsRight)
         {
             var amountOfTrees = 0;
             (int x, int y) currentPosition = (0, 0);
