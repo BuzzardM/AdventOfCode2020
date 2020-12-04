@@ -35,16 +35,7 @@ namespace AdventOfCode
             {
                 if (line.Equals(""))
                 {
-                    var passportInfo = new Dictionary<string, string>();
-                    foreach (var passportLine in passportLines)
-                    {
-                        foreach (var pair in passportLine.Split(" "))
-                        {
-                            var keyValueArray = pair.Split(":");
-                            passportInfo.Add(keyValueArray[0], keyValueArray[1]);
-                        }
-                    }
-                    passports.Add(new Passport(passportInfo));
+                    passports.Add(new Passport((from passportLine in passportLines from pair in passportLine.Split(" ") select pair.Split(":")).ToDictionary(keyValueArray => keyValueArray[0], keyValueArray => keyValueArray[1])));
                     passportLines.Clear();
                     continue;
                 }
@@ -108,7 +99,7 @@ namespace AdventOfCode
         public bool IsValid()
         {
             var validPasswordIdRegex = new Regex("^[0-9]{9}$", RegexOptions.Compiled);
-            string[] validEyeColors = {"amb", "blu", "brn", "gry", "grn", "hzl", "oth"};
+            string[] validEyeColors = { "amb", "blu", "brn", "gry", "grn", "hzl", "oth" };
             var validHairColorRegex = new Regex("^#[0-9a-f]{6}$", RegexOptions.Compiled);
 
             if (!IsComplete()) return false;
