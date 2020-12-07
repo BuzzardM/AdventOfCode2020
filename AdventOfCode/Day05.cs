@@ -38,7 +38,7 @@ namespace AdventOfCode
             return File.ReadAllLines(InputFilePath).Select(line => new BoardingPass(line)).ToList();
         }
     }
-
+    
     internal class BoardingPass
     {
         private const int SeatMultiplier = 8;
