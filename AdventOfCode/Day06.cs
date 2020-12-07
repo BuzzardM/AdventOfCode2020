@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using AoCHelper;
 using FileParser;
 
@@ -22,6 +22,7 @@ namespace AdventOfCode
             {
                 answers += groupOfLines.SelectMany(line => line).Distinct().Count();
             }
+
             return answers.ToString();
         }
 

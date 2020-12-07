@@ -90,21 +90,21 @@ namespace AdventOfCode
             }
             return entries;
         }
-    }
-
-    internal class Entry
-    {
-        public string Password { get; }
-        public char PolicyCharacter { get; }
-        public int FirstInt { get; }
-        public int SecondInt { get; }
-
-        public Entry(string password, char policyChar, int first, int second)
+        internal class Entry
         {
-            Password = password;
-            PolicyCharacter = policyChar;
-            FirstInt = first;
-            SecondInt = second;
+            public string Password { get; }
+            public char PolicyCharacter { get; }
+            public int FirstInt { get; }
+            public int SecondInt { get; }
+
+            public Entry(string password, char policyChar, int first, int second)
+            {
+                Password = password;
+                PolicyCharacter = policyChar;
+                FirstInt = first;
+                SecondInt = second;
+            }
         }
     }
+
 }

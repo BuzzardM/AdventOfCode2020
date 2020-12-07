@@ -43,90 +43,91 @@ namespace AdventOfCode
             }
             return passports;
         }
-    }
 
-    internal class Passport
-    {
-        public int? BirthYear { get; }
-        public int? IssueYear { get; }
-        public int? ExpirationYear { get; }
-        public string Height { get; }
-        public string HairColor { get; }
-        public string EyeColor { get; }
-        public string PasswordId { get; }
-        public string CountryId { get; }
-
-        public Passport(IDictionary<string, string> passportInfo)
+        internal class Passport
         {
-            foreach (var (key, value) in passportInfo)
+            public int? BirthYear { get; }
+            public int? IssueYear { get; }
+            public int? ExpirationYear { get; }
+            public string Height { get; }
+            public string HairColor { get; }
+            public string EyeColor { get; }
+            public string PasswordId { get; }
+            public string CountryId { get; }
+
+            public Passport(IDictionary<string, string> passportInfo)
             {
-                switch (key)
+                foreach (var (key, value) in passportInfo)
                 {
-                    case "byr":
-                        BirthYear = Convert.ToInt32(value);
-                        break;
-                    case "iyr":
-                        IssueYear = Convert.ToInt32(value);
-                        break;
-                    case "eyr":
-                        ExpirationYear = Convert.ToInt32(value);
-                        break;
-                    case "hgt":
-                        Height = value;
-                        break;
-                    case "hcl":
-                        HairColor = value;
-                        break;
-                    case "ecl":
-                        EyeColor = value;
-                        break;
-                    case "pid":
-                        PasswordId = value;
-                        break;
-                    case "cid":
-                        CountryId = value;
-                        break;
+                    switch (key)
+                    {
+                        case "byr":
+                            BirthYear = Convert.ToInt32(value);
+                            break;
+                        case "iyr":
+                            IssueYear = Convert.ToInt32(value);
+                            break;
+                        case "eyr":
+                            ExpirationYear = Convert.ToInt32(value);
+                            break;
+                        case "hgt":
+                            Height = value;
+                            break;
+                        case "hcl":
+                            HairColor = value;
+                            break;
+                        case "ecl":
+                            EyeColor = value;
+                            break;
+                        case "pid":
+                            PasswordId = value;
+                            break;
+                        case "cid":
+                            CountryId = value;
+                            break;
+                    }
                 }
             }
-        }
 
-        public bool IsComplete()
-        {
-            return BirthYear != null && IssueYear != null && ExpirationYear != null && Height != null &&
-                   HairColor != null && EyeColor != null && PasswordId != null;
-        }
+            public bool IsComplete()
+            {
+                return BirthYear != null && IssueYear != null && ExpirationYear != null && Height != null &&
+                       HairColor != null && EyeColor != null && PasswordId != null;
+            }
 
-        public bool IsValid()
-        {
-            var validPasswordIdRegex = new Regex("^[0-9]{9}$", RegexOptions.Compiled);
-            string[] validEyeColors = { "amb", "blu", "brn", "gry", "grn", "hzl", "oth" };
-            var validHairColorRegex = new Regex("^#[0-9a-f]{6}$", RegexOptions.Compiled);
+            public bool IsValid()
+            {
+                var validPasswordIdRegex = new Regex("^[0-9]{9}$", RegexOptions.Compiled);
+                string[] validEyeColors = { "amb", "blu", "brn", "gry", "grn", "hzl", "oth" };
+                var validHairColorRegex = new Regex("^#[0-9a-f]{6}$", RegexOptions.Compiled);
 
-            if (!IsComplete()) return false;
-            if (BirthYear < 1920 || BirthYear > 2002)
-                return false;
-            if (IssueYear < 2010 || IssueYear > 2020)
-                return false;
-            if (ExpirationYear < 2020 || ExpirationYear > 2030)
-                return false;
-            if (!validPasswordIdRegex.IsMatch(PasswordId))
-                return false;
-            if (!validEyeColors.Contains(EyeColor))
-                return false;
-            if (!validHairColorRegex.IsMatch(HairColor))
-                return false;
+                if (!IsComplete()) return false;
+                if (BirthYear < 1920 || BirthYear > 2002)
+                    return false;
+                if (IssueYear < 2010 || IssueYear > 2020)
+                    return false;
+                if (ExpirationYear < 2020 || ExpirationYear > 2030)
+                    return false;
+                if (!validPasswordIdRegex.IsMatch(PasswordId))
+                    return false;
+                if (!validEyeColors.Contains(EyeColor))
+                    return false;
+                if (!validHairColorRegex.IsMatch(HairColor))
+                    return false;
 
-            if (!Height.EndsWith("cm") && !Height.EndsWith("in"))
-                return false;
+                if (!Height.EndsWith("cm") && !Height.EndsWith("in"))
+                    return false;
 
-            var heightNumber = Convert.ToInt32(Height.Substring(0, Height.Length - 2));
+                var heightNumber = Convert.ToInt32(Height.Substring(0, Height.Length - 2));
 
-            if (Height.EndsWith("in") && (heightNumber < 59 || heightNumber > 76))
-                return false;
-            if (Height.EndsWith("cm") && (heightNumber < 150 || heightNumber > 193))
-                return false;
+                if (Height.EndsWith("in") && (heightNumber < 59 || heightNumber > 76))
+                    return false;
+                if (Height.EndsWith("cm") && (heightNumber < 150 || heightNumber > 193))
+                    return false;
 
-            return true;
+                return true;
+            }
         }
     }
+
 }
