@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 using AoCHelper;
 
 namespace AdventOfCode
@@ -26,7 +23,7 @@ namespace AdventOfCode
 
         public override string Solve_2()
         {
-            var contiguousRange = GetContiguousRange();
+            var contiguousRange = GetContiguousRange(GetWrongNumber(25));
 
             return (contiguousRange.Min() + contiguousRange.Max()).ToString();
         }
@@ -46,10 +43,8 @@ namespace AdventOfCode
             return !(from i in preambleList where i <= number from j in preambleList where i + j == number && i != j select i).Any();
         }
 
-        private List<long> GetContiguousRange()
+        private List<long> GetContiguousRange(long wrongNumber)
         {
-            var wrongNumber = Convert.ToInt32(Solve_1());
-            
             for (var i = 0; i < _input.Count; i++)
             {
                 var sum = _input[i];
