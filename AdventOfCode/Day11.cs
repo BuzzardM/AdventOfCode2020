@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using AoCHelper;
@@ -8,64 +7,57 @@ namespace AdventOfCode
 {
     class Day11 : BaseDay
     {
-        private readonly char[][] _input;
+        private readonly SeatingMapItem[][] _inputPartOne;
+        private readonly SeatingMapItem[][] _inputPartTwo;
         private const int OccupationRulePartOne = 4;
         private const int OccupationRulePartTwo = 5;
 
         public Day11()
         {
-            _input = ParseInput();
+            _inputPartOne = ParseInput();
+            _inputPartTwo = _inputPartOne;
+            FillAdjacentSeatingMapItems(_inputPartOne, false);
+            FillAdjacentSeatingMapItems(_inputPartTwo, true);
         }
 
         public override string Solve_1()
         {
-            (char[][] changedSeats, int amountOfSeatsChanged) result = (_input, -1);
+            (SeatingMapItem[][] changedSeats, int amountOfSeatsChanged) result = (_inputPartOne, -1);
             while (result.amountOfSeatsChanged != 0)
             {
-                result = ChangeSeats(result.changedSeats);
+                result = ChangeSeats(result.changedSeats, false);
             }
-            return result.changedSeats.SelectMany(value => value).Count(c => c.Equals('#')).ToString();
+            return result.changedSeats.SelectMany(value => value).Count(c => c.Icon.Equals('#')).ToString();
         }
 
         public override string Solve_2()
         {
-            throw new NotImplementedException();
+            return "1";
         }
 
-        private static (char[][] changedSeats, int amountOfSeatsChanged) ChangeSeats(char[][] seats)
+        private static (SeatingMapItem[][] changedSeats, int amountOfSeatsChanged) ChangeSeats(SeatingMapItem[][] seats, bool partTwo)
         {
-            var result = new char[seats.Length][];
+            var occupationRule = partTwo ? OccupationRulePartTwo : OccupationRulePartOne;
+            var result = seats;
             var amountOfSeatsChanged = 0;
             for (var i = 0; i < seats.Length; i++)
             {
-                result[i] = new char[seats[i].Length];
                 for (var j = 0; j < seats[i].Length; j++)
                 {
-                    switch (seats[i][j])
+                    switch (seats[i][j].Icon)
                     {
-                        case '.':
-                            result[i][j] = '.';
-                            break;
                         case 'L':
-                            if (GetRelativePositions(j, i, seats).All(value => value != '#'))
+                            if (seats[i][j].AdjacentSeatingMapItems.All(value => value.Icon != '#'))
                             {
-                                result[i][j] = '#';
+                                result[i][j].ChangeIcon();
                                 amountOfSeatsChanged++;
-                            }
-                            else
-                            {
-                                result[i][j] = 'L';
                             }
                             break;
                         case '#':
-                            if (GetRelativePositions(j, i, seats).Count(value => value == '#') >= OccupationRulePartOne)
+                            if (seats[i][j].AdjacentSeatingMapItems.Count(value => value.Icon == '#') >= occupationRule)
                             {
-                                result[i][j] = 'L';
+                                result[i][j].ChangeIcon();
                                 amountOfSeatsChanged++;
-                            }
-                            else
-                            {
-                                result[i][j] = '#';
                             }
                             break;
                     }
@@ -75,57 +67,76 @@ namespace AdventOfCode
             return (result, amountOfSeatsChanged);
         }
 
-        private static List<char> GetRelativePositions(int x, int y, char[][] seats)
+        private SeatingMapItem[][] ParseInput()
         {
-            var result = new List<char>
+            var file = File.ReadAllLines(InputFilePath);
+            var result = new SeatingMapItem[file.Length][];
+            for (var i = 0; i < file.Length; i++)
             {
+                result[i] = new SeatingMapItem[file[i].Length];
+                for (var j = 0; j < file[i].Length; j++)
                 {
-                    y-1 >= 0
-                    ? seats[y-1][x]
-                    : ' '
-                },
-                {
-                    y+1 < seats.Length
-                    ? seats[y+1][x]
-                    : ' '
-                },
-                {
-                    x-1 >= 0
-                    ? seats[y][x-1]
-                    : ' '
-                },
-                {
-                    x+1 < seats[x].Length
-                    ? seats[y][x+1]
-                    : ' '
-                },
-                {
-                    y-1 >= 0 && x-1 >= 0
-                    ? seats[y-1][x-1]
-                    : ' '
-                },
-                {
-                    y-1 >= 0 && x+1 < seats[x].Length
-                    ? seats[y-1][x+1]
-                    : ' '
-                },
-                {
-                    y+1 < seats.Length && x-1 >= 0
-                    ? seats[y+1][x-1]
-                    : ' '
-                },
-                {
-                    y+1 < seats.Length && x+1 < seats[x].Length
-                    ? seats[y+1][x+1]
-                    : ' '
+                    result[i][j] = new SeatingMapItem(j, i, file[i][j]);
                 }
-            };
+            }
+
             return result;
         }
 
-        private char[][] ParseInput()
+        private static void FillAdjacentSeatingMapItems(SeatingMapItem[][] input, bool partTwo)
         {
-            return File.ReadAllLines(InputFilePath).Select(i => i.ToArray()).ToArray();
+            if (!partTwo)
+            {
+                for (var i = 0; i < input.Length; i++)
+                {
+                    for (var j = 0; j < input[i].Length; j++)
+                    {
+                        input[i][j].AdjacentSeatingMapItems = new List<SeatingMapItem>();
+                        if (j - 1 >= 0)
+                            input[i][j].AdjacentSeatingMapItems.Add(input[i][j - 1]);
+                        if (j + 1 < input[i].Length)
+                            input[i][j].AdjacentSeatingMapItems.Add(input[i][j + 1]);
+                        if (i - 1 >= 0)
+                            input[i][j].AdjacentSeatingMapItems.Add(input[i - 1][j]);
+                        if (i + 1 < input.Length)
+                            input[i][j].AdjacentSeatingMapItems.Add(input[i + 1][j]);
+                        if (j - 1 >= 0 && i - 1 >= 0)
+                            input[i][j].AdjacentSeatingMapItems.Add(input[i - 1][j - 1]);
+                        if (j - 1 >= 0 && i + 1 < input.Length)
+                            input[i][j].AdjacentSeatingMapItems.Add(input[i + 1][j - 1]);
+                        if (j + 1 < input[i].Length && i - 1 >= 0)
+                            input[i][j].AdjacentSeatingMapItems.Add(input[i - 1][j + 1]);
+                        if (j + 1 < input[i].Length && i + 1 < input.Length)
+                            input[i][j].AdjacentSeatingMapItems.Add(input[i + 1][j + 1]);
+                    }
+                }
+            }
+            else
+            {
+                // code for part 2
+            }
+        }
+
+        internal class SeatingMapItem
+        {
+            public int X { get; }
+            public int Y { get; }
+            public char Icon { get; private set; }
+            public List<SeatingMapItem> AdjacentSeatingMapItems { get; set; }
+
+            public SeatingMapItem(int x, int y, char icon)
+            {
+                X = x;
+                Y = y;
+                Icon = icon;
+            }
+
+            public void ChangeIcon()
+            {
+                Icon = Icon == '#'
+                        ? 'L'
+                        : '#';
+            }
         }
     }
 }
