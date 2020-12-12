@@ -32,7 +32,12 @@ namespace AdventOfCode
 
         public override string Solve_2()
         {
-            return "1";
+            (SeatingMapItem[][] changedSeats, int amountOfSeatsChanged) result = (_inputPartTwo, -1);
+            while (result.amountOfSeatsChanged != 0)
+            {
+                result = ChangeSeats(result.changedSeats, true);
+            }
+            return result.changedSeats.SelectMany(value => value).Count(c => c.Icon.Equals('#')).ToString();
         }
 
         private static (SeatingMapItem[][] changedSeats, int amountOfSeatsChanged) ChangeSeats(SeatingMapItem[][] seats, bool partTwo)
