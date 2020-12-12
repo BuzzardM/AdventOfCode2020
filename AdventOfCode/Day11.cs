@@ -43,33 +43,35 @@ namespace AdventOfCode
         private static (SeatingMapItem[][] changedSeats, int amountOfSeatsChanged) ChangeSeats(SeatingMapItem[][] seats, bool partTwo)
         {
             var occupationRule = partTwo ? OccupationRulePartTwo : OccupationRulePartOne;
-            var result = seats;
-            var amountOfSeatsChanged = 0;
-            for (var i = 0; i < seats.Length; i++)
+            var seatsToChange = new List<SeatingMapItem>();
+            foreach (var seatingMapItemArray in seats)
             {
-                for (var j = 0; j < seats[i].Length; j++)
+                foreach (var seatingMapItem in seatingMapItemArray)
                 {
-                    switch (seats[i][j].Icon)
+                    switch (seatingMapItem.Icon)
                     {
                         case 'L':
-                            if (seats[i][j].AdjacentSeatingMapItems.All(value => value.Icon != '#'))
+                            if (seatingMapItem.AdjacentSeatingMapItems.All(value => value.Icon != '#'))
                             {
-                                result[i][j].ChangeIcon();
-                                amountOfSeatsChanged++;
+                                seatsToChange.Add(seatingMapItem);
                             }
                             break;
                         case '#':
-                            if (seats[i][j].AdjacentSeatingMapItems.Count(value => value.Icon == '#') >= occupationRule)
+                            if (seatingMapItem.AdjacentSeatingMapItems.Count(value => value.Icon == '#') >= occupationRule)
                             {
-                                result[i][j].ChangeIcon();
-                                amountOfSeatsChanged++;
+                                seatsToChange.Add(seatingMapItem);
                             }
                             break;
                     }
                 }
             }
 
-            return (result, amountOfSeatsChanged);
+            foreach (var seat in seatsToChange)
+            {
+                seat.ChangeIcon();
+            }
+
+            return (seats, seatsToChange.Count);
         }
 
         private SeatingMapItem[][] ParseInput()
