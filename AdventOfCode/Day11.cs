@@ -120,7 +120,13 @@ namespace AdventOfCode
             }
             else
             {
-                // code for part 2
+                for (var i = 0; i < input.Length; i++)
+                {
+                    for (var j = 0; j < input[i].Length; j++)
+                    {
+                        input[i][j].AdjacentSeatingMapItems = new List<SeatingMapItem>();
+                    }
+                }
             }
         }
 
