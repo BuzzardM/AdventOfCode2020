@@ -15,7 +15,7 @@ namespace AdventOfCode
         public Day11()
         {
             _inputPartOne = ParseInput();
-            _inputPartTwo = _inputPartOne;
+            _inputPartTwo = ParseInput();
             FillAdjacentSeatingMapItems(_inputPartOne, false);
             FillAdjacentSeatingMapItems(_inputPartTwo, true);
         }
@@ -125,6 +125,100 @@ namespace AdventOfCode
                     for (var j = 0; j < input[i].Length; j++)
                     {
                         input[i][j].AdjacentSeatingMapItems = new List<SeatingMapItem>();
+                        SeatingMapItem left = null;
+                        SeatingMapItem right = null;
+                        SeatingMapItem up = null;
+                        SeatingMapItem down = null;
+                        SeatingMapItem left_up = null;
+                        SeatingMapItem left_down = null;
+                        SeatingMapItem right_up = null;
+                        SeatingMapItem right_down = null;
+                        var x = j;
+                        var y = i;
+                        while (x - 1 >= 0 && left == null)
+                        {
+                            if (input[y][x - 1].Icon != '.')
+                                left = input[y][x - 1];
+                            else
+                                x--;
+                        }
+                        x = j;
+                        y = i;
+                        while (x + 1 < input[i].Length && right == null)
+                        {
+                            if (input[y][x + 1].Icon != '.')
+                                right = input[y][x + 1];
+                            else
+                                x++;
+                        }
+                        x = j;
+                        y = i;
+                        while (y - 1 >= 0 && up == null)
+                        {
+                            if (input[y - 1][x].Icon != '.')
+                                up = input[y - 1][x];
+                            else
+                                y--;
+                        }
+                        x = j;
+                        y = i;
+                        while (y + 1 < input.Length && down == null)
+                        {
+                            if (input[y + 1][x].Icon != '.')
+                                down = input[y + 1][x];
+                            else
+                                y++;
+                        }
+                        x = j;
+                        y = i;
+                        while (x - 1 >= 0 && y - 1 >= 0 && left_up == null)
+                        {
+                            if (input[y - 1][x - 1].Icon == '.')
+                                left_up = input[y - 1][x - 1];
+                            else
+                            {
+                                x--;
+                                y--;
+                            }
+                        }
+                        x = j;
+                        y = i;
+                        while (x - 1 >= 0 && y + 1 < input.Length && left_down == null)
+                        {
+                            if (input[y + 1][x - 1].Icon == '.')
+                                left_down = input[y + 1][x - 1];
+                            else
+                            {
+                                x--;
+                                y++;
+                            }
+                        }
+                        x = j;
+                        y = i;
+                        while (x + 1 < input[i].Length && y - 1 >= 0 && right_up == null)
+                        {
+                            if (input[y - 1][x + 1].Icon == '.')
+                                right_up = input[y - 1][x + 1];
+                            else
+                            {
+                                x++;
+                                y--;
+                            }
+                        }
+                        x = j;
+                        y = i;
+                        while (x + 1 < input[i].Length && y + 1 < input.Length && right_down == null)
+                        {
+                            if (input[y + 1][x + 1].Icon == '.')
+                                right_down = input[y + 1][x + 1];
+                            else
+                            {
+                                x++;
+                                y++;
+                            }
+                        }
+
+                        input[i][j].AdjacentSeatingMapItems.AddRange(new[] { left, right, up, down, left_up, left_down, right_up, right_down }.Where(seatItem => seatItem is not null));
                     }
                 }
             }
